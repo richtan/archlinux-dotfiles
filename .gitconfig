@@ -1,0 +1,14 @@
+[user]
+  name = Richie Tan
+  email = richietan2004@gmail.com
+[credential]
+  helper = store
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  ui = true
+  pager = true
+[core]
+  excludesfile = ~/.gitignore

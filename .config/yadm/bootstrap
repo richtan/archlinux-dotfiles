@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo "==============================================================================="
+echo "       _      _     _              _           _       _    __ _ _             "
+echo "      (_)    | |   | |            ( )         | |     | |  / _(_) |            "
+echo "  _ __ _  ___| |__ | |_ __ _ _ __ |/ ___    __| | ___ | |_| |_ _| | ___  ___   "
+echo " | '__| |/ __| '_ \| __/ _\` | '_ \  / __|  / _\` |/ _ \| __|  _| | |/ _ \/ __|"
+echo " | |  | | (__| | | | || (_| | | | | \__ \ | (_| | (_) | |_| | | | |  __/\__ \  "
+echo " |_|  |_|\___|_| |_|\__\__,_|_| |_| |___/  \__,_|\___/ \__|_| |_|_|\___||___/  "
+echo "                                                                               "
+echo "==============================================================================="
+
+username="$(id -un)"
+if [ "$username" = "root" ]; then printf "Non-root user required."; exit 255; fi
+
+command -v git >/dev/null 2>&1 || sudo pacman -S git --noconfirm
+command -v yay >/dev/null 2>&1 || { git clone https://aur.archlinux.org/yay.git "/home/$username/yay" && cd "/home/$username/yay" && makepkg -si --noconfirm; }
+
+yay -S --noremovemake --noconfirm --needed --answerdiff None --answerclean None --answeredit None --answerupgrade None - < "/home/$username/packages.txt"
+
+yadm decrypt
+
+chsh -s "$(command -v zsh)" "$username"
+
+sudo systemctl enable --now wicd wpa_supplicant
+
+echo "==============================================================================="
+echo "Restart your computer to finish installation."
+echo "==============================================================================="

@@ -1,0 +1,62 @@
+configuration {
+    lines: 12;
+    show-icons: true;
+    display-window: "Window";
+}
+
+* {
+  /* Variables */
+  accent:           #728cbb;
+  background:       #1c1c1c;
+  background-light: #1f1f1f;
+  background-focus: #282828;
+  foreground:       #bbbbbb;
+  /* Settings */
+  background-color: @background;
+  text-color:       @foreground;
+  font:             "FuraMono Nerd Font 12";
+}
+/* Input window */
+inputbar,
+prompt,
+textbox-prompt-colon,
+entry {
+  background-color: @background-light;
+}
+#inputbar {
+  children: [ prompt, textbox-prompt-colon, entry ];
+  /*      vertical    horizontal */
+  margin: 4px         0px;
+}
+#prompt {
+  /*       vertical   horizontal */
+  padding: 10px       20px;
+  background-color: @accent;
+  text-color: @background;
+}
+#textbox-prompt-colon {
+  expand: false;
+  str: "::";
+  padding: 10px;
+}
+#entry {
+  text-color: @accent;
+  /*       top    right   bottom  left */
+  padding: 10px   10px    10px    0px;
+}
+/* List of entries */
+#element {
+  padding: 12px;
+  /*      vertical    horizontal */
+  margin: 4px         0px;
+  /*      top     right   bottom  left */
+  border: 0px     0px     0px     8px;
+  background-color: @background-light;
+  border-color: @background-light;
+}
+#element.selected {
+  background-color: @background-focus;
+  text-color: @accent;
+  border-color: @accent;
+}
+
