@@ -6,7 +6,7 @@ gaps outer 0
 smart_borders on
 smart_gaps on
 
-border_radius 0
+# border_radius 0
 focus_follows_mouse no
 
 font pango:FuraMono Nerd Font 10

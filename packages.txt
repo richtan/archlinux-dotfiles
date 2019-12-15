@@ -33,8 +33,10 @@ noto-fonts-extra
 okular
 pamixer
 pavucontrol
+polybar
 python-pip
 ripgrep
+rofi
 termite
 tldr
 vim-plugins-profiler
@@ -42,6 +44,6 @@ xdo
 xorg
 xorg-drivers
 xorg-xinit
-yay
 yadm
+yay
 zsh
