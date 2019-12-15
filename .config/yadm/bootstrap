@@ -16,7 +16,7 @@ if [ "$username" = "root" ]; then printf "Non-root user required."; exit 255; fi
 command -v git >/dev/null 2>&1 || sudo pacman -S git --noconfirm
 command -v yay >/dev/null 2>&1 || { git clone https://aur.archlinux.org/yay.git "/home/$username/yay" && cd "/home/$username/yay" && makepkg -si --noconfirm; }
 
-yay -S --noremovemake --noconfirm --needed --answerdiff None --answerclean None --answeredit None --answerupgrade None - < "/home/$username/packages.txt"
+yay -S --noremovemake --noconfirm --needed --nouseask --sudoloop --norebuild --answerdiff None --answerclean None --answeredit None --answerupgrade None - < "/home/$username/packages.txt"
 
 yadm decrypt
 
