@@ -13,6 +13,7 @@ feh
 fkill
 gist
 gotop
+pulseaudio
 gradle
 gvim
 i3-gaps-rounded-git
