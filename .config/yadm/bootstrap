@@ -11,7 +11,7 @@ echo "                                                                          
 echo "==============================================================================="
 
 username="$(id -un)"
-if [ "$username" = "root" ]; then printf "Non-root user required."; exit 255; fi
+if [ "$username" = "root" ]; then echo "Non-root user required."; exit 255; fi
 
 command -v git >/dev/null 2>&1 || sudo pacman -S git --noconfirm
 command -v yay >/dev/null 2>&1 || { git clone https://aur.archlinux.org/yay.git "/home/$username/yay" && cd "/home/$username/yay" && makepkg -si --noconfirm; }
