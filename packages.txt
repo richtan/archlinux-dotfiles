@@ -43,6 +43,7 @@ tldr
 vim-plugins-profiler
 xdo
 xorg
+xclip
 xorg-drivers
 xorg-xinit
 yadm

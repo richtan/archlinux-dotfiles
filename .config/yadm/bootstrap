@@ -22,6 +22,8 @@ yadm decrypt
 
 chsh -s "$(command -v zsh)" "$username"
 
+feh --bg-scale ~/pictures/sao_wallpaper1.png
+
 sudo systemctl enable --now wicd wpa_supplicant
 
 echo "==============================================================================="
