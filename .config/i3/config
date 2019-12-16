@@ -101,8 +101,6 @@ bindsym $mod+Ctrl+Down resize shrink height 1 px or 1 ppt
 bindsym $mod+Ctrl+Left resize grow width 1 px or 1 ppt
 
 # Startup
-exec --no-startup-id xinput set-prop 16 300 1
-exec --no-startup-id xinput set-prop 16 278 1
 exec --no-startup-id xset r rate 200 25
 exec --no-startup-id setxkbmap -option caps:escape
 
