@@ -124,5 +124,5 @@ exec --no-startup-id fcitx -d
 exec --no-startup-id compton -b
 exec --no-startup-id dunst
 exec --no-startup-id copyq
-exec --no-startup-id source ~/.fehbg
+exec_always --no-startup-id source ~/.fehbg
 
