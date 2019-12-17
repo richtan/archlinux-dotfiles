@@ -26,10 +26,10 @@ feh --bg-scale ~/pictures/sao_wallpaper1.png
 
 curl https://pyenv.run | bash
 
-pip install pynvim --user
-
 sudo systemctl enable --now wicd wpa_supplicant
 
-echo "==============================================================================="
-echo "Restart your computer to finish installation."
-echo "==============================================================================="
+read -p "Reboot computer to finish installation? (Yn)" yn
+case $yn in
+  [Nn]* ) exit;;
+  * ) sudo reboot; break;;
+esac
