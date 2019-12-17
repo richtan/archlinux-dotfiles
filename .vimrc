@@ -1,7 +1,7 @@
 """ richtan's vimrc
 let s:vimfiles_dir = $HOME . (has('win32') || has('win32unix') || has('wsl')
       \ ? '/vimfiles/' : '/.vim/')
-let &runtimepath = s:vimfiles_dir . ',' . &runtimepath
+let &runtimepath = s:vimfiles_dir . ',' . s:vimfiles_dir . 'after' . ',' . &runtimepath
 
 let g:mapleader = ','
 
