@@ -262,7 +262,7 @@ let g:netrw_banner = 0
 
 if has('nvim')
   let g:loaded_python_provider = 0
-  let g:loaded_python3_provider = 0
+  " let g:loaded_python3_provider = 0
   let g:loaded_node_provider = 0
   let g:loaded_ruby_provider = 0
   augroup vimrc
