@@ -24,6 +24,12 @@ chsh -s "$(command -v zsh)" "$username"
 
 feh --bg-scale ~/pictures/sao_wallpaper1.png
 
+curl https://pyenv.run | bash
+
+exec $SHELL
+
+pip install pynvim --user
+
 sudo systemctl enable --now wicd wpa_supplicant
 
 echo "==============================================================================="
