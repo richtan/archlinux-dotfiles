@@ -1,18 +1,9 @@
 """ richtan's vimrc
-let s:vimfiles_dir = $HOME . (has('win32') || has('win32unix') || has('wsl')
-      \ ? '/vimfiles/' : '/.vim/')
+let s:vimfiles_dir = $HOME . (has('win32') || has('win32unix') || has('wsl') ? '/vimfiles/' : '/.vim/')
 let &runtimepath = s:vimfiles_dir . ',' . s:vimfiles_dir . 'after' . ',' . &runtimepath
+let &packpath=&runtimepath
 
 let g:mapleader = ','
-
-if empty(getcwd())
-  silent! execute 'cd ' . $HOME
-endif
-
-if has('gui_running')
-  set guifont^=FuraMono\ Nerd\ Font\ 12
-  set guioptions=cM
-endif
 
 augroup vimrc
   autocmd!
@@ -23,63 +14,31 @@ function! s:curl_install(dest, url) abort
     echom 'Installing ' . fnamemodify(a:dest, ':t')
     call mkdir(fnamemodify(a:dest, ':h'), 'p')
     if executable('powershell')
-      execute '!powershell Invoke-WebRequest -Uri ' . a:url .
-            \ ' -OutFile ' . a:dest . ' -UseBasicParsing'
+      silent! execute '!powershell iwr -uri ' . a:url . ' -outfile ' . a:dest . ' -useb'
     else
-      execute '!curl -fLo ' . a:dest . ' --create-dirs ' . a:url
+      silent! execute '!curl -fLo ' . a:dest . ' --create-dirs ' . a:url
     endif
   endif
 endfunction
-
-let s:external_deps = {'git': 'git', 'nodejs': 'node'}
-
-function! s:check_deps() abort
-  let l:missing_deps = []
-  for dep in keys(s:external_deps)
-    if !executable(s:external_deps[dep])
-      call add(l:missing_deps, dep)
-    endif
-  endfor
-
-  if len(l:missing_deps) > 0
-    if executable('powershell')
-      if executable('scoop')
-        let s:scoop_cmd = 'Set-ExecutionPolicy -ExecutionPolicy RemoteSigned' .
-              \ ' -Scope CurrentUser -Force; iwr -useb get.scoop.sh | iex; '
-      else
-        let s:scoop_cmd = ''
-      endif
-      let s:scoop_cmd += 'scoop install ' . join(l:missing_deps)
-      let @+ = s:scoop_cmd
-      echom 'Run this command in PowerShell to install missing dependencies (copied): ' .
-            \ s:scoop_cmd
-    else
-      let @+ = join(l:missing_deps)
-      echom 'Install missing dependencies and add them to $PATH (copied): ' . join(l:missing_deps)
-    endif
-  endif
-endfunction
-
-autocmd vimrc VimEnter * call <SID>check_deps()
 
 """ Plugins
-call <SID>curl_install(s:vimfiles_dir . 'autoload/plug.vim',
-      \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
+call <SID>curl_install(s:vimfiles_dir . 'autoload/plug.vim', 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
 
 runtime! macros/matchit.vim
 
 if executable('git')
   nnoremap <leader>p :PlugClean<CR>:q<CR>:PlugUpdate<CR>
 
-  autocmd vimrc VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) |
-        \ PlugInstall --sync | q | source $MYVIMRC | endif
+  autocmd vimrc VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) | PlugInstall --sync | q | source $MYVIMRC | endif
 
-  call plug#begin(s:vimfiles_dir . 'plugged')
+  call plug#begin(s:vimfiles_dir . 'bundle')
 
   Plug 'lifepillar/vim-gruvbox8'
   let g:gruvbox_filetype_hi_groups = 1
   let g:gruvbox_plugin_hi_groups = 1
   Plug 'sheerun/vim-polyglot'
+  Plug 'richtan/vim-xd'
+  autocmd vimrc VimEnter * call xd#check_external_dependencies({'git': ['git', 'git'], 'node': ['nodejs', 'node'], 'ccls': ['', 'ccls'], 'ctags': ['ctags', 'ctags']})
   Plug 'tommcdo/vim-exchange'
   Plug 'tpope/vim-surround'
   Plug 'markonm/traces.vim'
@@ -136,7 +95,6 @@ if executable('git')
           \     'initializationOptions': {
           \        'cache': {
           \          'directory': '/tmp/ccls',
-          \          'retainInMemory': 1
           \        }
           \      }
           \   }
@@ -165,7 +123,7 @@ if executable('git')
 
     function! s:show_documentation() abort
       if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
+        silent! execute 'h '.expand('<cword>')
       else
         call CocAction('doHover')
       endif
@@ -183,6 +141,9 @@ syntax enable
 set autoindent
 set autoread
 set backspace=indent,eol,start
+set guifont^=FuraMono\ Nerd\ Font\ 12
+set guioptions=cM
+set confirm
 set belloff=all
 set breakindent
 set clipboard^=unnamed,unnamedplus
@@ -251,45 +212,39 @@ set wildignore+=*/.hg/*,*/.svn/*,*/.git/*
 set wildignore+=*/vendor/cache/*,*/public/system/*,*/tmp/*,*/log/*,*/solr/data/*,*/.DS_Store
 set wildignorecase
 set wildmenu
+set ttyfast
+set showbreak=>\ 
+set t_vb=
+
+let &t_SI = "\<Esc>[6 q"
+let &t_SR = "\<Esc>[4 q"
+let &t_EI = "\<Esc>[2 q"
 
 scriptencoding utf-8
-
-let &showbreak = '> '
 
 let &undodir = s:vimfiles_dir . 'undo'
 
 let g:netrw_banner = 0
+let g:netrw_dirhistmax = 0
 
 if has('nvim')
   let g:loaded_python_provider = 0
-  " let g:loaded_python3_provider = 0
-  if executable('pip3') && !has('python3')
-    echom 'Installing pynvim for python3'
-    silent! execute '!pip3 install pynvim --user'
-  endif
+  let g:loaded_python3_provider = 0
   let g:loaded_node_provider = 0
   let g:loaded_ruby_provider = 0
   augroup vimrc
     autocmd TermOpen,BufEnter term://* startinsert
-    autocmd UIEnter * silent! GuiFont FuraMono Nerd Font:h12
+    autocmd UIEnter * silent! GuiFont! FuraMono Nerd Font:h12
     autocmd UIEnter * silent! GuiPopupmenu 0
     autocmd UIEnter * silent! GuiTabline 0
   augroup END
-else
-  set ttyfast
-  set t_vb=
-  let &t_SI = "\<Esc>[6 q"
-  let &t_SR = "\<Esc>[4 q"
-  let &t_EI = "\<Esc>[2 q"
 endif
 
 """ Autocommands
 augroup vimrc
-  autocmd BufEnter * let &titlestring = hostname() . ":" . expand("%:p")
   autocmd BufEnter * set formatoptions-=cro
   autocmd CompleteDone * if pumvisible() == 0 | pclose | endif
-  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") |
-        \ exe "normal! g`\"" | endif
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 augroup END
 
 """ Mappings
@@ -315,9 +270,6 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
-inoremap jk <esc>
-inoremap kj <esc>
-
 nnoremap U <C-r>
 
 nnoremap ; :
@@ -328,7 +280,7 @@ xnoremap > >gv
 
 nnoremap Y y$
 
-execute 'nnoremap <leader>v :e ' . expand('<sfile>') . '<cr>'
+silent! execute 'nnoremap <leader>v :e ' . expand('<sfile>') . '<cr>'
 
 nnoremap ' `
 nnoremap ` '
@@ -352,9 +304,6 @@ inoremap <c-j> <C-n>
 inoremap <c-k> <C-p>
 cnoremap <c-j> <C-n>
 cnoremap <c-k> <C-p>
-
-nnoremap <leader>f :e **/*
-nnoremap <leader>c :colo 
 
 nnoremap <expr> <leader>b &bg=='light' ? ":set bg=dark<cr>" : ":set bg=light<cr>"
 
