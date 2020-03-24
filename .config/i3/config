@@ -6,7 +6,7 @@ gaps outer 0
 smart_borders on
 smart_gaps on
 
-# border_radius 0
+border_radius 0
 focus_follows_mouse no
 
 font pango:FuraMono Nerd Font 10
@@ -17,7 +17,7 @@ bindsym $mod+Return exec termite
 
 bindsym $mod+q kill
 
-bindsym $mod+grave exec i3lock -i ~/pictures/windows10light.png -u -e -n -p win
+bindsym $mod+grave exec i3lock -i ~/pictures/windows10light.png -e -n -p win
 
 bindsym $mod+d exec "rofi -combi-modi drun -show combi -modi combi"
 
@@ -118,7 +118,6 @@ bindsym XF86AudioPrev exec mpc prev
 bindsym XF86MonBrightnessUp exec light -A 10
 bindsym XF86MonBrightnessDown exec light -U 10
 
-exec --no-startup-id fcitx -d
 exec --no-startup-id compton -b
 exec --no-startup-id dunst
 exec --no-startup-id copyq

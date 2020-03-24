@@ -11,9 +11,9 @@ if [ ! -d "${HOME}/.zgen" ]; then
   git clone https://github.com/tarjoilija/zgen.git "${HOME}/.zgen"
 fi
 
-if [ ! -d "${HOME}/.pyenv" ]; then
-  curl https://pyenv.run | bash
-fi
+# if [ ! -d "${HOME}/.pyenv" ]; then
+#   curl https://pyenv.run | bash
+# fi
 
 source "${HOME}/.zgen/zgen.zsh"
 
@@ -36,6 +36,7 @@ if ! zgen saved; then
     laggardkernel/git-ignore
     gradle/gradle-completion
     hlissner/zsh-autopair
+    darvid/zsh-poetry
     zdharma/fast-syntax-highlighting
     zsh-users/zsh-autosuggestions
     zsh-users/zsh-completions
@@ -71,13 +72,30 @@ function chpwd() {
 function findup () {
   path=$(pwd)
   while [[ "$path" != "" && ! -e "$path/$1" ]]; do
+    echo "$path"
     path=${path%/*}
   done
   echo "$path/$1"
 }
 
+function manga-extract() {
+  for file in "$1/*.zip"; do
+    7z x "$file" -o"$(basename $file .zip)"
+    rm "$file"
+  done
+  for vol in "$1/$1*"; do
+    convert "$vol/*.jpeg" "$vol.pdf"
+    rm "$vol" -r
+  done
+  pdftk "$1/*.pdf" cat output $1.pdf
+  rm $1/$1-vol*
+}
+
+export PATH="$HOME/.nimble/bin:$HOME/.gem/ruby/2.7.0/bin:$PATH"
+
 alias ls="lsd"
 alias anime-dl="anime dl --quality 1080p -xd \"{aria2}\" --download-dir ~/anime --provider animepahe --episodes "
+alias manga-dl="manga-py -rWd ~/manga"
 alias django="python $(findup manage.py)"
 alias g="git"
 # alias vim="nvim"
@@ -90,13 +108,18 @@ alias yt-mp3="youtube-dl --extract-audio --audio-format mp3 -o \"~/music/%(title
 alias ff="firefox"
 alias config="git --git-dir=$HOME/.dotfiles --work-tree=$HOME"
 
+alias django-reload="rm db.sqlite3 game/migrations/0001_initial.py **/__pycache__ -r; python manage.py makemigrations && python manage.py migrate && python manage.py compilescss && { echo 'yes' | python manage.py collectstatic }"
+unset SECRET_KEY
+
 [ -f ~/.purepower ]
 source ~/.purepower
 
+source $HOME/.poetry/env
+
 unsetopt prompt_cr prompt_sp
 
-# fpath+=~/.zfunc
-# compinit
+fpath+=~/.zfunc
+compinit
 
 # Startup time profiling
 # zprof
